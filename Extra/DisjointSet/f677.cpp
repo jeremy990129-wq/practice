@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define fastio ios::sync_with_stdio(0),cin.tie(0),cout.tie(0)
+class DSU{
+    public:
+        vector<int> f,sz;
+        DSU(int n){
+            f.resize(n+1);
+            sz.resize(n+1,1);
+            for(int i=0;i<n+1;i++)f[i]=i;
+        }
+        int find(int x){
+            if(f[x]==x)return x;
+            f[x]=find(f[x]);
+            return f[x];
+        }
+        void unite(int x,int y){
+            x=find(x);
+            y=find(y);
+            if(x==y)return;
+            if(sz[y]>sz[x])swap(x,y);
+            sz[x]+=sz[y];
+            f[y]=x;
+        }
+};
+
+int main(){
+    fastio;
+    int n,m;
+    cin>>n>>m;
+    DSU dsu(n);
+    while(m--){
+        int x,y;
+        cin>>x>>y;
+        dsu.unite(x,y);
+    }
+
+    int ans=0;
+    for(int i=0;i<n;i++){
+        if(dsu.find(i)==dsu.find(0))ans++;
+    }
+    cout<<ans;
+}
