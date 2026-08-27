@@ -1,0 +1,54 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define fastio ios::sync_with_stdio(0), cin.tie(0) ,cout.tie(0)
+class DSU{
+    public:
+        vector<int> f ,sz;
+        DSU(int n){
+            f.resize(n+1);
+            sz.resize(n+1,1);
+            for(int i=0;i<n+1;i++){
+                f[i]=i;
+            }
+        }
+        int find(int x){
+                if(f[x]==x) return x;
+                f[x]=find(f[x]);
+                return f[x];
+            }
+        void unite(int x,int y){
+                x=find(x);
+                y=find(y);
+                if(x==y) return;
+                if(sz[y]>sz[x]) swap(x,y);
+                sz[x]+=sz[y];
+                f[y]=x;
+        }
+};
+int main(){
+    fastio;
+    int n,q;
+    cin>>n>>q;
+    DSU dsu(2*n);
+    while(q--){
+        string a;
+        int u,v;
+        cin>>a>>u>>v;
+        if(a=="F"){
+            dsu.unite(u,v);
+            dsu.unite(u+n,v+n);
+        }else if(a=="E"){
+            dsu.unite(u,n+v);
+            dsu.unite(n+u,v);
+        }else{
+            if(dsu.find(u)==dsu.find(v)){
+                cout<<"SAME"<<'\n';
+            }else if(dsu.find(u)==dsu.find(n+v)){
+                cout<<"DIFFERENT"<<'\n';
+            }else{
+                cout<<"UNKNOWN"<<'\n';
+            }
+        }
+    }
+}
